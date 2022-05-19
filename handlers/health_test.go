@@ -3,6 +3,8 @@ package handlers_test
 import (
 	"io"
 	"net/http"
+
+	// httptest to save response from handler, so that it can be inspected
 	"net/http/httptest"
 	"testing"
 
