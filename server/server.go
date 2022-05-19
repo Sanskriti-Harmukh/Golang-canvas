@@ -24,6 +24,9 @@ type Options struct {
 	Port int
 }
 
+// New turns the host and port pair into an address the server understands (in the form host:port),
+// and creates a http.Server using that address and the mux.
+
 func New(opts Options) *Server {
 	address := net.JoinHostPort(opts.Host, strconv.Itoa(opts.Port))
 	mux := chi.NewMux()

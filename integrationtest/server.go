@@ -10,8 +10,8 @@ import (
 
 // CreateServer for testing on port 8081, returning a cleanup function that stops the server.
 // Usage:
-// 	cleanup := CreateServer()
-// 	defer cleanup()
+// cleanup := CreateServer()
+// defer cleanup()
 func CreateServer() func() {
 	s := server.New(server.Options{
 		Host: "localhost",
