@@ -3,10 +3,16 @@
 package main
 
 import (
+	"canvas/server"
+	"context"
 	"fmt"
 	"os"
+	"os/signal"
+	"strconv"
+	"syscall"
 
 	"go.uber.org/zap"
+	"golang.org/x/sync/errgroup"
 )
 
 func main() {
@@ -25,7 +31,43 @@ func start() int {
 		_ = log.Sync()
 	}()
 
+	host := getStringOrDefault("HOST", "localhost")
+	port := getIntOrDefault("PORT", 8080)
+
+	s := server.New(server.Options{
+		Host: host,
+		Port: port,
+	})
+
+	var eg errgroup.Group
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT)
+	defer stop()
+
+	eg.Go(func() error {
+		ctx.Done()
+		if err := s.Stop(); err != nil {
+			log.Info("Error stopping server", zap.Error(err))
+			return err
+		}
+		return nil
+	})
+	if err := eg.Wait(); err != nil {
+		return 1
+	}
+
 	return 0
+}
+
+func getIntOrDefault(name string, defaultV int) int {
+	v, ok := os.LookupEnv(name)
+	if !ok {
+		return defaultV
+	}
+	vAsInt, err := strconv.Atoi(v)
+	if err != nil {
+		return defaultV
+	}
+	return vAsInt
 }
 
 func createLogger(env string) (*zap.Logger, error) {
