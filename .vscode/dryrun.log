@@ -1,0 +1,5 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/sanskriti/devops/golang/Golang-canvas'
+go tool cover -html=cover.out
+make: Leaving directory '/home/sanskriti/devops/golang/Golang-canvas'
+ 
