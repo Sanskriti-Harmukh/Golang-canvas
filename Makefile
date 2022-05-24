@@ -14,3 +14,8 @@ test:
 
 test-integration:
 	go test -coverprofile=cover.out -p 1 ./...
+
+build:
+	docker build -t canvas .
+
+	
